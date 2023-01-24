@@ -31,6 +31,11 @@
               <p class="align-items-end mb-0">
                 Price: {{ item.regular_price.value }}
               </p>
+              <div class="d-flex">
+                <span @click="minus(item)">-</span>
+                <p class="align-items-end mb-0">{{ item.quantity }}</p>
+                <span @click="plus(item)">+</span>
+              </div>
               <button @click="removeFromCart(item)" class="btn btn-primary">
                 Удалить
               </button>
@@ -55,16 +60,19 @@ export default {
     },
   },
   name: "CartItems",
+  data() {
+    return {};
+  },
   computed: {
     cartTotalCost() {
       let result = [];
       this.cart.map((item) => {
-        result.push(item.regular_price.value);
+        result.push(item.regular_price.value * item.quantity);
+        console.log(item.quantity);
       });
       result = result.reduce((sum, el) => {
         return sum + el;
       });
-      console.log(result);
       return result;
     },
   },
@@ -72,8 +80,18 @@ export default {
     removeFromCart(product) {
       this.$emit("removeFromCart", product);
     },
+    minus(index) {
+      this.$emit("minus", index);
+    },
+    plus(index) {
+      this.$emit("plus", index);
+    },
   },
 };
 </script>
 
-<style></style>
+<style>
+span {
+  cursor: pointer;
+}
+</style>

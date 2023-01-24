@@ -1,0 +1,69 @@
+{
+  "products": [
+    {
+      "type": "simple",
+      "id": 1,
+      "sku": "s1",
+      "title": "Product 1",
+      "regular_price": {
+        "currency": "USD",
+        "value": 29.12
+      },
+      "image": "logo.png",
+      "brand": 1
+    },
+    {
+      "type": "simple",
+      "id": 2,
+      "sku": "s1",
+      "title": "Product 2",
+      "regular_price": {
+        "currency": "USD",
+        "value": 30
+      },
+      "image": "logo.png",
+      "brand": 2
+    },
+    {
+      "type": "simple",
+      "id": 3,
+      "sku": "s1",
+      "title": "Product 3",
+      "regular_price": {
+        "currency": "USD",
+        "value": 35
+      },
+      "image": "logo.png",
+      "brand": 3
+    },
+    {
+      "type": "simple",
+      "id": 4,
+      "sku": "s1",
+      "title": "Product 3",
+      "regular_price": {
+        "currency": "USD",
+        "value": 35
+      },
+      "image": "logo.png",
+      "brand": 4
+    }
+  ],
+  "posts": [
+    {
+      "id": 1,
+      "title": "json-server",
+      "author": "typicode"
+    }
+  ],
+  "comments": [
+    {
+      "id": 1,
+      "body": "some comment",
+      "postId": 1
+    }
+  ],
+  "profile": {
+    "name": "typicode"
+  }
+}

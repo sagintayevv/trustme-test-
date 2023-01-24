@@ -1,77 +1,46 @@
 import Vue from "vue";
 import Vuex from "vuex";
-// import axios from "axios";
+import axios from "axios";
 
 Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
-    products: [
-      {
-        type: "simple",
-        id: 1,
-        sku: "s1",
-        title: "Product 1",
-        regular_price: {
-          currency: "USD",
-          value: 29.12,
-        },
-        image: "logo.png",
-        brand: 1,
-      },
-      {
-        type: "simple",
-        id: 2,
-        sku: "s1",
-        title: "Product 2",
-        regular_price: {
-          currency: "USD",
-          value: 40.12,
-        },
-        image: "logo.png",
-        brand: 2,
-      },
-      {
-        type: "simple",
-        id: 3,
-        sku: "s1",
-        title: "Product 3",
-        regular_price: {
-          currency: "USD",
-          value: 45.12,
-        },
-        image: "logo.png",
-        brand: 3,
-      },
-      {
-        type: "simple",
-        id: 4,
-        sku: "s1",
-        title: "Product 4",
-        regular_price: {
-          currency: "USD",
-          value: 27.12,
-        },
-        image: "logo.png",
-        brand: 4,
-      },
-      {
-        type: "simple",
-        id: 5,
-        sku: "s1",
-        title: "Product 4",
-        regular_price: {
-          currency: "USD",
-          value: 27.12,
-        },
-        image: "logo.png",
-        brand: 4,
-      },
-    ],
+    products: [],
     cart: [],
   },
   getters: {},
-  mutations: {},
-  actions: {},
+  mutations: {
+    getProducts(state, payload) {
+      state.products = payload;
+    },
+    addProductToCart(state, product) {
+      const existingProduct = state.cart.find((item) => item.id === product.id);
+      if (existingProduct) {
+        existingProduct.quantity++;
+      } else {
+        state.cart.push({ ...product, quantity: 1 });
+      }
+    },
+    updateProductQuantity(state, { id, quantity }) {
+      const existingProduct = state.cart.find((item) => item.id === id);
+      if (existingProduct) {
+        existingProduct.quantity = quantity;
+      }
+    },
+    removeFromCart(state, product) {
+      state.cart.splice(state.cart.indexOf(product), 1);
+    },
+  },
+  actions: {
+    async getProducts(context) {
+      try {
+        const result = await axios.get("http://localhost:3000/products");
+        context.commit("getProducts", result.data);
+      } catch (error) {
+        console.error(error);
+      }
+    },
+  },
   modules: {},
 });

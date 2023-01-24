@@ -6,19 +6,33 @@
         <img src="@/assets/logo.png" style="width: 30px" />
         <button
           type="button"
-          class="btn btn-primary"
+          class="btn btn-none position-relative"
           data-bs-toggle="modal"
           data-bs-target="#staticBackdrop"
         >
-          Cart
-          <!-- <div class="cart">
-            <span class="count">1</span>
-            <i class="material-icons">shopping_cart</i>
-          </div> -->
+          <i
+            v-if="!this.$store.state.cart.length"
+            class="bi bi-cart-plus"
+            style="font-size: 30px"
+          ></i>
+          <i
+            v-if="this.$store.state.cart.length"
+            class="bi bi-cart-plus-fill"
+            style="font-size: 30px"
+          >
+          </i>
+          <span class="position-absolute badge rounded-pill bg-danger">
+            {{ this.$store.state.cart.length }}
+          </span>
         </button>
 
         <!-- Modal -->
-        <cart-items @removeFromCart="removeFromCart" :cart="cart" />
+        <cart-items
+          @removeFromCart="removeFromCart"
+          @minus="minus"
+          @plus="plus"
+          :cart="this.$store.state.cart"
+        />
       </div>
     </nav>
     <div class="container d-flex">
@@ -26,6 +40,7 @@
         <ul class="list-group mt-4">
           <li
             class="list-group-item d-flex justify-content-between align-items-center bg-primary text-white"
+            @click="allBrands()"
           >
             All Brands
           </li>
@@ -41,7 +56,10 @@
       </div>
       <div class="content mx-4">
         <h6 class="content-title">Catalog</h6>
-        <product-view @addToCart="addToCart" :product="filteredProduct" />
+        <product-view
+          @addToCart="addProductToCart"
+          :product="filteredProduct"
+        />
       </div>
     </div>
   </div>
@@ -71,7 +89,6 @@ export default {
   },
   data() {
     return {
-      count: 0,
       brands: [
         {
           id: 1,
@@ -98,16 +115,31 @@ export default {
           code: "brand_3",
         },
       ],
-      cart: [],
       filterProduct: [],
     };
   },
   methods: {
-    addToCart(currentProduct) {
-      this.cart.push(currentProduct);
+    addProductToCart(product) {
+      this.$store.commit("addProductToCart", product);
+    },
+    updateProductQuantity(id, quantity) {
+      this.$store.commit("updateProductQuantity", { id, quantity });
     },
     removeFromCart(cartProduct) {
-      this.cart.splice(this.cart.indexOf(cartProduct), 1);
+      this.$store.commit("removeFromCart", cartProduct);
+    },
+    minus(item) {
+      if (item.quantity > 1) {
+        this.updateProductQuantity(item.id, item.quantity - 1);
+        console.log(item);
+      }
+    },
+    plus(item) {
+      this.updateProductQuantity(item.id, item.quantity + 1);
+      console.log(item);
+    },
+    allBrands() {
+      this.filterProduct = [];
     },
     filter(brand) {
       this.filterProduct = [];
@@ -117,6 +149,9 @@ export default {
         }
       });
     },
+  },
+  mounted() {
+    this.$store.dispatch("getProducts");
   },
 };
 </script>
